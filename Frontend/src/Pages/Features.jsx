@@ -1,0 +1,88 @@
+import React from "react";
+import { Link } from "react-router-dom";
+
+const Features = () => {
+  return (
+    <div className="min-h-screen bg-gray-50">
+
+
+      <section className="bg-gradient-to-r from-indigo-700 to-blue-600 text-white text-center py-16 px-6">
+        <h1 className="text-4xl font-bold mb-3">
+          Powerful Features
+        </h1>
+        <p className="text-lg opacity-90 max-w-2xl mx-auto">
+          Everything you need to build, manage, and optimize your job applications with AI.
+        </p>
+      </section>
+
+      
+      <section className="py-16 px-6">
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+
+          <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+            <h3 className="text-xl font-semibold mb-2">AI Resume Builder</h3>
+            <p className="text-gray-600">
+              Create professional resumes instantly using AI-powered suggestions and templates.
+            </p>
+          </div>
+
+          <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+            <h3 className="text-xl font-semibold mb-2">Smart Job Matching</h3>
+            <p className="text-gray-600">
+              Get personalized job recommendations based on your skills and profile.
+            </p>
+          </div>
+
+          <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+            <h3 className="text-xl font-semibold mb-2">One-Click Apply</h3>
+            <p className="text-gray-600">
+              Apply to multiple jobs instantly without filling forms again and again.
+            </p>
+          </div>
+
+          <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+            <h3 className="text-xl font-semibold mb-2">Application Tracking</h3>
+            <p className="text-gray-600">
+              Track all your job applications in one clean dashboard.
+            </p>
+          </div>
+
+          <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+            <h3 className="text-xl font-semibold mb-2">AI Cover Letters</h3>
+            <p className="text-gray-600">
+              Generate personalized cover letters in seconds using AI.
+            </p>
+          </div>
+
+          <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+            <h3 className="text-xl font-semibold mb-2">Interview Prep</h3>
+            <p className="text-gray-600">
+              Practice common interview questions with AI feedback.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+    
+      <section className="bg-gray-900 text-white text-center py-16 px-6">
+        <h2 className="text-3xl font-bold mb-4">
+          Ready to Upgrade Your Career?
+        </h2>
+        <p className="text-gray-300 mb-6">
+          Start using JobAI Pro and land your dream job faster.
+        </p>
+
+        <Link
+          to="/register"
+          className="px-6 py-3 bg-blue-600 rounded-lg font-semibold hover:bg-blue-700 transition"
+        >
+          Get Started
+        </Link>
+      </section>
+
+    </div>
+  );
+};
+
+export default Features;
