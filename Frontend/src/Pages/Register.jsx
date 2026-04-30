@@ -8,13 +8,17 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const [form, setForm] = useState({
-    username: "",
-    password: ""
+
+    Email:"",
+    Password: ""
+  
+    
   });
 
   const handleChange = (field, value) => {
-    const updated = { ...form, [field]: value };
-    setForm(updated);
+    setForm({ ...form, [field]: value });
+
+  
 
     if (!value.trim()) {
       setErrors((prev) => ({
@@ -27,20 +31,26 @@ const Register = () => {
         [field]: ""
       }));
     }
-  };
+  }
 
   const handleRegister = async () => {
     setErrors({});
     let newErrors = {};
 
-    if (!form.username.trim()) {
-      newErrors.username = "Username is required";
-    }
+     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!form.password.trim()) {
-      newErrors.password = "Password is required";
-    } else if (form.password.length < 5 || form.password.length > 10) {
-      newErrors.password = "Password must be 5-10 characters";
+         if (!form.Email.trim()) {
+    newErrors.Email = "Email is required";
+  } else if (!emailPattern.test(form.Email)) {
+    newErrors.Email = "Invalid email format";
+  }
+
+
+
+    if (!form.Password.trim()) {
+      newErrors.Password = "Password is required";
+    } else if (form.Password.length < 5 || form.Password.length > 10) {
+      newErrors.Password = "Password must be 5-10 characters";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -67,6 +77,7 @@ const Register = () => {
 
     navigate("/");
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 text-white">
@@ -96,21 +107,21 @@ const Register = () => {
           
           <div>
             <label className="text-xs text-gray-400 uppercase">
-              Username
+              Email
             </label>
 
             <input
               className={`mt-1 w-full px-4 py-2 rounded-lg bg-gray-900 border ${
-                errors.username ? "border-red-500" : "border-gray-700"
+                errors.Email? "border-red-500" : "border-gray-700"
               } focus:outline-none focus:ring-2 focus:ring-blue-500 text-white`}
-              placeholder="Enter username"
-              value={form.username}
-              onChange={(e) => handleChange("username", e.target.value)}
+              placeholder="Enter Email"
+              value={form.Email}
+              onChange={(e) => handleChange("Email", e.target.value)}
             />
 
-            {errors.username && (
+            {errors.Email && (
               <p className="text-red-400 text-xs mt-1">
-                {errors.username}
+                {errors.Email}
               </p>
             )}
           </div>
@@ -123,12 +134,12 @@ const Register = () => {
 
             <input
               className={`mt-1 w-full px-4 py-2 pr-16 rounded-lg bg-gray-900 border ${
-                errors.password ? "border-red-500" : "border-gray-700"
+                errors.Password ? "border-red-500" : "border-gray-700"
               } focus:outline-none focus:ring-2 focus:ring-blue-500 text-white`}
               type={showPassword ? "text" : "password"}
               placeholder="Min 5 characters"
-              value={form.password}
-              onChange={(e) => handleChange("password", e.target.value)}
+              value={form.Password}
+              onChange={(e) => handleChange("Password", e.target.value)}
             />
 
             <span
@@ -138,9 +149,9 @@ const Register = () => {
               {showPassword ? "Hide" : "Show"}
             </span>
 
-            {errors.password && (
+            {errors.Password && (
               <p className="text-red-400 text-xs mt-1">
-                {errors.password}
+                {errors.Password}
               </p>
             )}
           </div>
@@ -165,7 +176,7 @@ const Register = () => {
             Already have an account?{" "}
             <span
               className="text-blue-400 cursor-pointer hover:underline"
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/login")}
             >
               Sign in
             </span>
@@ -175,6 +186,7 @@ const Register = () => {
       </div>
     </div>
   );
-};
+  };
+
 
 export default Register;

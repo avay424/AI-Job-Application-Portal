@@ -1,24 +1,24 @@
-import express from "express";
-import mongoose from "mongoose";
+import express, { Router } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
-
-connectDB();
+import router from "./Routes/aiRoutes.js";
 
 dotenv.config();
-const PORT=process.env.PORT
+connectDB();
+console.log("db connected")
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+app.use("/api/ai", router);
+
 app.get("/", (req, res) => {
-  res.send("API is running...");
+  res.send("AI Job Portal Running");
 });
 
-
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(5000, () => {
+  console.log("Server running on port 5000");
 });

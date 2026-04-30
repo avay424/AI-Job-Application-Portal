@@ -2,8 +2,10 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
+    const navigate=useNavigate();
     return (
 
         <div className="bg-[#0b0b12] text-white min-h-screen">
@@ -30,10 +32,14 @@ const LandingPage = () => {
 
 
 
-
-                <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded-lg">
-                    Login
-                </button>
+                <div className="flex justify-between gap-4">
+                    <button onClick={()=>navigate("/Login")} className="bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded-lg ">
+                        Login
+                    </button>
+                    <button onClick={()=>navigate("/register")} className="bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded-lg">
+                        Register
+                    </button>
+                </div>
             </nav>
 
 
@@ -59,18 +65,20 @@ const LandingPage = () => {
                     </p>
 
                     <div className="flex gap-4 mt-8">
-                        <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 rounded-lg">
+                        <button 
+                        onClick={()=>navigate("/dashboard")}
+                        className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 rounded-lg">
                             Get Started Free
                         </button>
 
-                        <button className="border border-gray-600 px-6 py-3 rounded-lg hover:bg-gray-800">
+                        <button onClick={()=>navigate("/working")} className="border border-gray-600 px-6 py-3 rounded-lg hover:bg-gray-800">
                             See How It Works
                         </button>
                     </div>
                 </div>
 
 
-                <div className="bg-[#12121c] p-6 rounded-2xl shadow-lg w-full max-w-md mx-auto">
+                <div className="bg-[#12121c] p-6 rounded-2xl shadow-lg w-full max-w-md mx-auto shadow-xl shadow-indigo-500/70">
                     <div className="bg-white text-black rounded-xl p-6 text-center">
                         <h1 className="my-2">Overall Match Score</h1>
 

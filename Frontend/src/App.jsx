@@ -5,6 +5,9 @@ import Register from "./Pages/Register.jsx";
 import LandingPage from "./Pages/LandingPage.jsx"
 import Home from "./Pages/Home.jsx";
 import Features from "./Pages/Features.jsx";
+import Working from "./Pages/Working.jsx";
+import Testimonials from "./Pages/Testimonials.jsx";
+import Otp from "./Pages/Otp.jsx";
 
 
 function App() {
@@ -15,6 +18,12 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/home" element={<Home />} />
       <Route path="/features" element={<Features />} />
+      <Route path="/working" element={<Working/>} />
+      <Route path="/testimonials" element={<Testimonials/>} />
+      <Route path="/login" element={<Login/>} />
+      <Route path="/otp" element={<Otp/>} />
+
+
 
     </Routes>
   );

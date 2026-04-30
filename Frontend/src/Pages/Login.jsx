@@ -7,8 +7,9 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const [form, setForm] = useState({
-    username: "",
-    password: ""
+    Email: "",
+    password: "",
+    Otp:""
   });
 
 
@@ -34,12 +35,19 @@ const Login = () => {
 
     let newErrors = {};
 
-    if (!form.username.trim()) {
-      newErrors.username = "Username is required";
-    }
+     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+         if (!form.Email.trim()) {
+    newErrors.Email = "Email is required";
+  } else if (!emailPattern.test(form.Email)) {
+    newErrors.Email = "Invalid email format";
+  }
 
     if (!form.password.trim()) {
       newErrors.password = "Password is required";
+    }
+     if (!form.Otp.trim()) {
+      newErrors.Otp = "Otp is required";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -68,16 +76,7 @@ const Login = () => {
       return;
     }
 
-    localStorage.setItem("token", data.token);
-    const payload = JSON.parse(atob(data.token.split(".")[1]));
-
-    if (payload.role === "student") {
-  navigate(`/student/${payload.username}`);
-} else if (payload.role === "teacher") {
-  navigate(`/teacher/${payload.username}`); 
-} else if (payload.role === "admin") {
-  navigate("/admin");
-}
+    
   };
 
 return (
@@ -106,17 +105,17 @@ return (
       <div className="bg-gray-800/60 border border-gray-700 rounded-xl p-5 space-y-4">
 
         <div>
-          <label className="text-xs text-gray-400 uppercase">Username</label>
+          <label className="text-xs text-gray-400 uppercase">Email</label>
           <input
             className={`mt-1 w-full px-4 py-2 rounded-lg bg-gray-900 border ${
-              errors.username ? "border-red-500" : "border-gray-700"
+              errors.Email? "border-red-500" : "border-gray-700"
             } focus:outline-none focus:ring-2 focus:ring-blue-500 text-white`}
-            placeholder="Enter username"
-            value={form.username}
-            onChange={(e) => handleChange("username", e.target.value)}
+            placeholder="Enter Email"
+            value={form.Email}
+            onChange={(e) => handleChange("Email", e.target.value)}
           />
-          {errors.username && (
-            <p className="text-red-400 text-xs mt-1">{errors.username}</p>
+          {errors.Email && (
+            <p className="text-red-400 text-xs mt-1">{errors.Email}</p>
           )}
         </div>
 
@@ -142,6 +141,20 @@ return (
 
           {errors.password && (
             <p className="text-red-400 text-xs mt-1">{errors.password}</p>
+          )}
+        </div>
+        <div>
+          <label className="text-xs text-gray-400 uppercase">Otp</label>
+          <input
+            className={`mt-1 w-full px-4 py-2 rounded-lg bg-gray-900 border ${
+              errors.Otp? "border-red-500" : "border-gray-700"
+            } focus:outline-none focus:ring-2 focus:ring-blue-500 text-white`}
+            placeholder="Enter Otp"
+            value={form.Otp}
+            onChange={(e) => handleChange("Otp", e.target.value)}
+          />
+          {errors.Otp && (
+            <p className="text-red-400 text-xs mt-1">{errors.Otp}</p>
           )}
         </div>
 
