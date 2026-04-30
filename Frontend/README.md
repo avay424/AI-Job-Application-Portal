@@ -1474,10 +1474,11 @@ export const analyzeResume = async (req, res) => {
     if (!req.file) {
       return res.json({ success: false, message: "No file uploaded" });
     }
-
+<!-- Here we request the data sent by frontend  -->
     const job = req.body.job;
-
+<!-- Here we use extract text to read from req.file.buffer , here buffer refers to raw file data -->
     const resumeText = await extractText(req.file.buffer);
+<!-- Here in result variable we store analyze with ai function coming from other page -->
 
     const result = await analyzeWithAI(resumeText, job);
 
@@ -1494,3 +1495,223 @@ export const analyzeResume = async (req, res) => {
     });
   }
 };
+
+
+## AiRoutes
+
+import express from "express";
+import multer from "multer";
+import { analyzeResume } from "../Controllers/aiController.js";
+
+const router = express.Router();
+<!-- Here multer handles file upload and memory storage helps to store file in ram not in folder -->
+const upload = multer({ storage: multer.memoryStorage() });
+<!-- Upload.single means takes onle one file at a time and stores it in req.file -->
+router.post("/analyze", upload.single("file"), analyzeResume);
+
+export default router;
+
+
+## Services/aiservices
+
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: process.env.GROQ_API_KEY,
+  baseURL: "https://api.groq.com/openai/v1"
+});
+<!-- This will run when ai fails it helps to give good user experience -->
+// fallback generators 
+const generateResumeFallback = (resume, job) => {
+  return `
+Improved Resume Suggestion:
+
+- Add clear technical skills section relevant to job
+- Highlight projects with measurable impact
+- Include tools, frameworks, and technologies
+- Improve structure: Summary → Skills → Projects → Experience
+- Align keywords with job description
+
+Original Resume Context:
+${resume?.slice(0, 500)}...
+`;
+};
+
+% This is the fallback cover letter generater 
+const generateCoverLetterFallback = (job) => {
+  return `
+Dear Hiring Manager,
+
+I am excited to apply for this role. I have strong technical skills and hands-on experience in full-stack development. I am eager to contribute to your team and grow professionally in this position.
+
+Sincerely,  
+Candidate
+`;
+};
+% Now this is the main function where we give propmt to ai
+export const analyzeWithAI = async (resume, job) => {
+  
+    const prompt = `
+You are a professional ATS resume evaluator used by recruiters.
+
+Return ONLY valid JSON:
+
+{
+  "atsScoreSection": {
+    "totalScore": number,
+    "label": "Excellent | Good | Average | Poor",
+    "summary": string
+  },
+  "matchedSkills": [string],
+  "missingSkills": [string],
+  "criticalGaps": [string],
+  "improvedResume": string,
+  "coverLetter": string
+}
+
+RULES:
+- NEVER return empty strings
+- Always generate improvedResume
+- Always generate coverLetter
+- Be realistic and recruiter-like
+
+Resume:
+${resume}
+
+Job:
+${job}
+`;
+
+  try {
+% YOU are calling the AI model
+    const response = await client.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [{ role: "user", content: prompt }],
+% it controls randomness
+      temperature: 0.2
+    });
+% Here is the response from ai so usually AI gives multiple choices response so here we took the first response and there is a content inside message which comes from response of AI in which ai generated answer is there
+    let text = response.choices[0].message.content;
+
+    console.log("RAW AI RESPONSE:", text);
+
+    
+  % AI often returns json data so we replace json and trim so no extra spaces exists
+    text = text
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
+% Now we use json.parse to convert the string into object like name:"Avay" this is an object
+    let parsed = JSON.parse(text);
+
+% Here we see if ai gives improved resume then use it otherwise we use fallbackresume
+
+% NOTE- parsed is now an object but improverresume is a string
+% Before parsing "improveresume:"answer" " but now improveresume:""
+
+     parsed.improvedResume =
+      parsed.improvedResume && parsed.improvedResume.trim()
+        ? parsed.improvedResume
+        : generateResumeFallback(resume, job);
+
+    parsed.coverLetter =
+      parsed.coverLetter && parsed.coverLetter.trim()
+        ? parsed.coverLetter
+        : generateCoverLetterFallback(job);
+
+    parsed.matchedSkills = parsed.matchedSkills || [];
+    parsed.missingSkills = parsed.missingSkills || [];
+    parsed.criticalGaps = parsed.criticalGaps || [];
+
+    return parsed;
+  } catch (err) {
+    console.log("AI FAILED:", err.message);
+
+    return {
+      atsScoreSection: {
+        totalScore: 0,
+        label: "Error",
+        summary: "AI processing failed"
+      },
+      matchedSkills: [],
+      missingSkills: [],
+      criticalGaps: [],
+      improvedResume: generateResumeFallback(resume, job),
+      coverLetter: generateCoverLetterFallback(job)
+    };
+  }
+};
+
+
+
+## Services/Pdfservices
+
+import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
+% Takes a pdf fie filebuffer
+export const extractText = async (fileBuffer) => {
+% Converts into uint8array because pdf.js cannot read raw buffer directly so we converts into raw binary format
+  const uint8Array = new Uint8Array(
+    fileBuffer.buffer,
+    fileBuffer.byteOffset,
+    fileBuffer.byteLength
+  );
+% data → your PDF file
+% disableWorker: true → run without background thread (simpler setup)
+% verbosity: 0 → hide logs
+% This prepares PDF for reading
+
+  const loadingTask = pdfjsLib.getDocument({
+    data: uint8Array,
+    disableWorker: true,
+    verbosity: 0
+  });
+% Now pdf is fully loaded to access
+  const pdf = await loadingTask.promise;
+% We will store all text here
+  let text = "";
+%  PDFs start from page 1 (not 0)
+  for (let i = 1; i <= pdf.numPages; i++) {
+    % get each page
+    const page = await pdf.getPage(i);
+    % This extracts all text elements from the page
+    const content = await page.getTextContent();
+% content.items → array of text chunks
+% item.str → actual text
+% .map() → extract text from each chunk
+% .join(" ") → combine into sentence
+% add to final text
+% If pdf has hello world it becomes "hello world"
+    text += content.items.map(item => item.str).join(" ") + " ";
+  }
+
+  return text;
+};
+
+% REMEMBER ITS NOT SOMETHING TO REMEMBER ITS SOMETHING TO UNDERSTAND WHAT'S HAPPENING
+
+##Server.js
+
+import express, { Router } from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import connectDB from "./config/db.js";
+import router from "./Routes/aiRoutes.js";
+dotenv.config();
+connectDB();
+console.log("db connected")
+ const PORT=process.env.PORT
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+app.use("/api/ai", router);
+
+app.get("/", (req, res) => {
+  res.send("AI Job Portal Running");
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on ${PORT}`);
+});
