@@ -38,3 +38,7 @@ yarn-debug.log*
 
 # OS files
 .DS_Store
+
+node_modules
+.env
+Backend/.env
