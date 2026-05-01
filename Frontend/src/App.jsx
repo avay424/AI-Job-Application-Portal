@@ -8,6 +8,9 @@ import Features from "./Pages/Features.jsx";
 import Working from "./Pages/Working.jsx";
 import Testimonials from "./Pages/Testimonials.jsx";
 import Otp from "./Pages/Otp.jsx";
+import Analyze from "./Pages/Analyze.jsx";
+import History from "./Pages/History.jsx";
+import Insights from "./Pages/Insights.jsx";
 
 
 function App() {
@@ -22,6 +25,9 @@ function App() {
       <Route path="/testimonials" element={<Testimonials/>} />
       <Route path="/login" element={<Login/>} />
       <Route path="/otp" element={<Otp/>} />
+      <Route path="/analyze" element={<Analyze/>} />
+       <Route path="/history" element={<History/>} />
+        <Route path="/insights" element={<Insights/>} />
 
 
 

@@ -8,17 +8,12 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const [form, setForm] = useState({
-
-    Email:"",
+    Email: "",
     Password: ""
-  
-    
   });
 
   const handleChange = (field, value) => {
     setForm({ ...form, [field]: value });
-
-  
 
     if (!value.trim()) {
       setErrors((prev) => ({
@@ -31,21 +26,19 @@ const Register = () => {
         [field]: ""
       }));
     }
-  }
+  };
 
   const handleRegister = async () => {
     setErrors({});
     let newErrors = {};
 
-     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-         if (!form.Email.trim()) {
-    newErrors.Email = "Email is required";
-  } else if (!emailPattern.test(form.Email)) {
-    newErrors.Email = "Invalid email format";
-  }
-
-
+    if (!form.Email.trim()) {
+      newErrors.Email = "Email is required";
+    } else if (!emailPattern.test(form.Email)) {
+      newErrors.Email = "Invalid email format";
+    }
 
     if (!form.Password.trim()) {
       newErrors.Password = "Password is required";
@@ -70,30 +63,19 @@ const Register = () => {
 
     if (data.success) {
       alert("Registered successfully");
-      navigate("/");
+      navigate("/login");
     } else {
       alert(data.message);
     }
-
-    navigate("/");
   };
-
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 text-white">
 
-      <div className="
-        w-full max-w-md
-        bg-gray-900
-        border border-gray-800
-        rounded-2xl
-        shadow-2xl
-        p-8
-      ">
+      <div className="w-full max-w-md bg-gray-900 border border-gray-800 rounded-2xl shadow-2xl p-6 sm:p-8">
 
-        
         <div className="flex flex-col items-center mb-6">
-          <div className="w-14 h-14 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+          <div className="w-14 h-14 bg-[#1877F2] hover:bg-[#166FE5] rounded-xl flex items-center justify-center shadow-lg">
             🎓
           </div>
 
@@ -101,41 +83,32 @@ const Register = () => {
           <p className="text-gray-400 text-sm">Join JobAI today</p>
         </div>
 
-      
         <div className="bg-gray-800/60 border border-gray-700 rounded-xl p-5 space-y-4">
 
-          
           <div>
-            <label className="text-xs text-gray-400 uppercase">
-              Email
-            </label>
+            <label className="text-xs text-gray-400 uppercase">Email</label>
 
             <input
               className={`mt-1 w-full px-4 py-2 rounded-lg bg-gray-900 border ${
-                errors.Email? "border-red-500" : "border-gray-700"
-              } focus:outline-none focus:ring-2 focus:ring-blue-500 text-white`}
+                errors.Email ? "border-red-500" : "border-gray-700"
+              } focus:outline-none focus:ring-2 focus:ring-blue-500`}
               placeholder="Enter Email"
               value={form.Email}
               onChange={(e) => handleChange("Email", e.target.value)}
             />
 
             {errors.Email && (
-              <p className="text-red-400 text-xs mt-1">
-                {errors.Email}
-              </p>
+              <p className="text-red-400 text-xs mt-1">{errors.Email}</p>
             )}
           </div>
 
-        
           <div className="relative">
-            <label className="text-xs text-gray-400 uppercase">
-              Password
-            </label>
+            <label className="text-xs text-gray-400 uppercase">Password</label>
 
             <input
               className={`mt-1 w-full px-4 py-2 pr-16 rounded-lg bg-gray-900 border ${
                 errors.Password ? "border-red-500" : "border-gray-700"
-              } focus:outline-none focus:ring-2 focus:ring-blue-500 text-white`}
+              } focus:outline-none focus:ring-2 focus:ring-blue-500`}
               type={showPassword ? "text" : "password"}
               placeholder="Min 5 characters"
               value={form.Password}
@@ -150,28 +123,17 @@ const Register = () => {
             </span>
 
             {errors.Password && (
-              <p className="text-red-400 text-xs mt-1">
-                {errors.Password}
-              </p>
+              <p className="text-red-400 text-xs mt-1">{errors.Password}</p>
             )}
           </div>
 
-      
           <button
-            className="
-              w-full py-2 rounded-lg
-              bg-blue-600 hover:bg-blue-700
-              text-white
-              font-semibold
-              transition
-              shadow-md
-            "
+            className="w-full py-2 rounded-lg bg-[#1877F2] hover:bg-[#166FE5]  font-semibold transition"
             onClick={handleRegister}
           >
             Create Account
           </button>
 
-      
           <p className="text-sm text-center text-gray-400">
             Already have an account?{" "}
             <span
@@ -183,10 +145,10 @@ const Register = () => {
           </p>
 
         </div>
+
       </div>
     </div>
   );
-  };
-
+};
 
 export default Register;

@@ -6,7 +6,7 @@ const client = new OpenAI({
   baseURL: "https://api.groq.com/openai/v1"
 });
 
-// fallback generators (IMPORTANT)
+
 const generateResumeFallback = (resume, job) => {
   return `
 Improved Resume Suggestion:
@@ -50,7 +50,8 @@ Return ONLY valid JSON:
   "missingSkills": [string],
   "criticalGaps": [string],
   "improvedResume": string,
-  "coverLetter": string
+  "coverLetter": string,
+  "feedback": string
 }
 
 RULES:
@@ -58,6 +59,13 @@ RULES:
 - Always generate improvedResume
 - Always generate coverLetter
 - Be realistic and recruiter-like
+- Be strict with ATS scoring
+- Be strict with missingSkills
+- Be strict with matchedSkills
+- Extract both technical and soft skills
+- Use action verbs and measurable impact
+- Do not include any explanation outside JSON
+
 
 Resume:
 ${resume}
@@ -70,14 +78,14 @@ ${job}
     const response = await client.chat.completions.create({
       model: "llama-3.3-70b-versatile",
       messages: [{ role: "user", content: prompt }],
-      temperature: 0.2
+      temperature: 0
     });
 
     let text = response.choices[0].message.content;
 
     console.log("RAW AI RESPONSE:", text);
 
-    // clean markdown
+    
     text = text
       .replace(/```json/g, "")
       .replace(/```/g, "")
@@ -85,7 +93,7 @@ ${job}
 
     let parsed = JSON.parse(text);
 
-    // 🔥 FORCE SAFETY FALLBACKS (IMPORTANT FIX)
+    
     parsed.improvedResume =
       parsed.improvedResume && parsed.improvedResume.trim()
         ? parsed.improvedResume
@@ -99,6 +107,7 @@ ${job}
     parsed.matchedSkills = parsed.matchedSkills || [];
     parsed.missingSkills = parsed.missingSkills || [];
     parsed.criticalGaps = parsed.criticalGaps || [];
+    parsed.feedback = parsed.feedback || [];
 
     return parsed;
   } catch (err) {
@@ -113,6 +122,7 @@ ${job}
       matchedSkills: [],
       missingSkills: [],
       criticalGaps: [],
+      feedback:[],
       improvedResume: generateResumeFallback(resume, job),
       coverLetter: generateCoverLetterFallback(job)
     };

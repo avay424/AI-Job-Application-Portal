@@ -3,42 +3,43 @@ import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 w-full overflow-x-hidden">
 
+      <section className="flex flex-col items-center justify-center text-center px-4 sm:px-6 py-16 sm:py-20  bg-[#1877F2] hover:bg-[#166FE5] text-white">
 
-      <section className="flex flex-col items-center justify-center text-center px-6 py-20 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
           Welcome to JobAI Pro
         </h1>
 
-        <p className="text-lg md:text-xl max-w-2xl opacity-90">
+        <p className="text-base sm:text-lg md:text-xl max-w-2xl opacity-90">
           Your AI-powered job application platform that helps you apply smarter, faster, and better.
         </p>
 
-        <div className="mt-6 flex gap-4">
+        <div className="mt-6 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <Link
             to="/login"
-            className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg shadow-md hover:bg-gray-100 transition"
+            className="px-6 py-3 border border-white  font-semibold rounded-lg  hover:bg-white hover:text-blue-600 shadow-md transition w-full sm:w-auto text-center"
           >
             Get Started
           </Link>
 
           <Link
             to="/features"
-            className="px-6 py-3 border border-white rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition"
+            className="px-6 py-3 border border-white rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition w-full sm:w-auto text-center"
           >
             Learn More
           </Link>
         </div>
+
       </section>
 
-    
-      <section className="py-16 px-6">
-        <h2 className="text-3xl font-bold text-center mb-10">
+      <section className="py-12 sm:py-16 px-4 sm:px-6">
+
+        <h2 className="text-2xl sm:text-3xl font-bold text-center mb-10">
           Why Choose JobAI Pro?
         </h2>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
 
           <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
             <h3 className="text-xl font-semibold mb-2">AI Resume Builder</h3>
@@ -62,23 +63,26 @@ const Home = () => {
           </div>
 
         </div>
+
       </section>
 
+      <section className="bg-gray-900 text-white text-center py-12 sm:py-16 px-4 sm:px-6">
 
-      <section className="bg-gray-900 text-white text-center py-16 px-6">
-        <h2 className="text-3xl font-bold mb-4">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-4">
           Start Your Career Journey Today
         </h2>
+
         <p className="text-gray-300 mb-6">
           Join thousands of students and professionals using JobAI Pro.
         </p>
 
         <Link
           to="/register"
-          className="px-6 py-3 bg-blue-600 rounded-lg font-semibold hover:bg-blue-700 transition"
+          className="px-6 py-3 bg-[#1877F2] hover:bg-[#166FE5] rounded-lg font-semibold transition"
         >
           Create Account
         </Link>
+
       </section>
 
     </div>
