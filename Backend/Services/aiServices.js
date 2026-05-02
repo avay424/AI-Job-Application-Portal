@@ -83,7 +83,6 @@ ${job}
 
     let text = response.choices[0].message.content;
 
-    console.log("RAW AI RESPONSE:", text);
 
     
     text = text
