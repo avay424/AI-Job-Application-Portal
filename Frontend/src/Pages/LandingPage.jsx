@@ -300,12 +300,34 @@
 // };
 
 // export default LandingPage;
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        jwtDecode(token);
+        setIsLoggedIn(true);
+      } catch (error) {
+        setIsLoggedIn(false);
+      }
+    }
+  }, []);
+
+  const handleGetStarted = () => {
+    if (isLoggedIn) {
+      navigate("/dashboard");
+    } else {
+      navigate("/login");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#070710] text-white w-full overflow-x-hidden">
@@ -371,7 +393,7 @@ const LandingPage = () => {
 
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
             <button
-              onClick={() => navigate("/dashboard")}
+              onClick={handleGetStarted}
               className="bg-[#1877F2] hover:bg-[#166FE5] px-6 py-3 rounded-lg shadow-lg hover:shadow-[#1877F2]/40 transition-all duration-300 transform hover:scale-105 active:scale-95"
             >
               Get Started Free
@@ -394,7 +416,7 @@ const LandingPage = () => {
 
                         <div className="relative w-28 sm:w-32 h-28 sm:h-32 mx-auto mb-4 transition-all duration-300 hover:scale-105">
                             <div className="absolute inset-0 rounded-full border-8 border-gray-200"></div>
-                            <div className="absolute inset-0 rounded-full border-8 border-green-400 border-t-transparent rotate-[120deg] transition-all duration-500 hover:rotate-[180deg]"></div>
+                            <div className="absolute inset-0 rounded-full border-8 border-green-400 border-t-transparent rotate-[120deg] transition-all duration-500 hover:rotate-[360deg]"></div>
                             <div className="flex items-center justify-center h-full text-xl sm:text-2xl font-bold">
                                 85%
                             </div>

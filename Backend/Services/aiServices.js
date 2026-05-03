@@ -35,16 +35,15 @@ Candidate
 
 export const analyzeWithAI = async (resume, job) => {
   
-    const prompt = `
+  const prompt = `
 You are a professional ATS resume evaluator used by recruiters.
 
 Return ONLY valid JSON:
 
-{
-  "atsScoreSection": {
-    "totalScore": number,
-    "label": "Excellent | Good | Average | Poor",
-    "summary": string
+{"atsScoreSection": {
+    "totalScore": number (0-100),
+    "label": "Excellent (90-100) | Good (75-89) | Average (60-74) | Poor (0-59)",
+    "summary": string (2-3 sentences explaining the score)
   },
   "matchedSkills": [string],
   "missingSkills": [string],
@@ -72,7 +71,7 @@ ${resume}
 
 Job:
 ${job}
-`;
+`; 
 
   try {
     const response = await client.chat.completions.create({

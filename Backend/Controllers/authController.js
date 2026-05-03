@@ -2,6 +2,10 @@ import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import User from "../models/User.js";
 import { otpStore } from "../utils/otpStore.js";
+import jwt from "jsonwebtoken"
+import dotenv from "dotenv"
+
+dotenv.config();
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -79,14 +83,21 @@ export const Login = async (req, res) => {
     if (!isMatch) {
       return res.json({ success: false, message: "Wrong password" });
     }
-
+const token = jwt.sign(
+  { email: user.email },
+  process.env.JWT_SECRET,
+  { expiresIn: "1d" }
+);
     res.json({
       success: true,
       message: "Login successful",
-      user
+    token
     });
+
+    
 
   } catch (err) {
     res.json({ success: false, message: err.message });
   }
 };
+
