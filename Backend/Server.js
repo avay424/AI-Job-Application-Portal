@@ -1,7 +1,7 @@
 import express, { Router } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import connectDB from "./config/db.js";
+import connectDB from "./config/Db.js";
 import router from "./Routes/aiRoutes.js";
 import authRoutes from "./Routes/authRoutes.js";
 connectDB();
