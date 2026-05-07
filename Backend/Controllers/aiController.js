@@ -1,7 +1,7 @@
 
 import { extractText } from "../Services/pdfServices.js";
 import { analyzeWithAI } from "../Services/aiServices.js";
-import HistoryModel from "../models/HistoryModel.js";
+import HistoryModel from "../Models/HistoryModel.js";
 
 export const analyzeResume = async (req, res) => {
   try {

@@ -1,10 +1,10 @@
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
-import User from "../models/User.js";
-import { otpStore } from "../utils/otpStore.js";
+import User from "../Models/User.js";
+import { otpStore } from "../Utils/otpStore.js";
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
-import HistoryModel from "../models/HistoryModel.js";
+import HistoryModel from "../Models/HistoryModel.js";
 
 dotenv.config();
 
