@@ -84,7 +84,8 @@ export const sendOtp = async (req, res) => {
   if (!email || !password) {
     return res.json({ success: false, message: "Missing fields" });
   }
-  const key = email.toLowerCase()
+  
+  const key = email.toLowerCase();
   const otp = Math.floor(100000 + Math.random() * 900000);
 
   otpStore[key] = {
@@ -93,25 +94,35 @@ export const sendOtp = async (req, res) => {
     expires: Date.now() + 300000
   };
 
-  try {
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  // Show OTP in terminal (for testing)
+  console.log("\n=================================");
+  console.log(`OTP for ${email}: ${otp}`);
+  console.log("=================================\n");
 
-    await sgMail.send({
-      to: email,
-      from: process.env.FROM_EMAIL,
-      subject: "Your OTP Code",
-      text: `Your OTP is ${otp}`,
-      html: `<h3>Your OTP is ${otp}</h3><p>This OTP expires in 5 minutes.</p>`
-    });
-
-    res.json({ success: true, message: "OTP sent successfully" });
-
-  } catch (error) {
-    console.error("SendGrid error:", error.response?.body || error);
-    res.json({ success: false, message: "Failed to send OTP" });
+  // Try to send email (optional - won't block if fails)
+  if (process.env.SENDGRID_API_KEY && process.env.FROM_EMAIL) {
+    try {
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+      await sgMail.send({
+        to: email,
+        from: process.env.FROM_EMAIL,
+        subject: "Your OTP Code",
+        text: `Your OTP is ${otp}`,
+        html: `<h3>Your OTP is ${otp}</h3><p>This OTP expires in 5 minutes.</p>`
+      });
+      console.log("Email sent successfully");
+    } catch (error) {
+      console.log("Email failed but continuing:", error.message);
+    }
   }
-};
 
+  // Return OTP in response for easy testing
+  res.json({ 
+    success: true, 
+    message: "Check terminal or console for OTP",
+    otp: otp  // Remove this line when going to production
+  });
+};
 
 export const verifyOtp = async (req, res) => {
   const { email, otp } = req.body;
