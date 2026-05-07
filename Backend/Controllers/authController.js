@@ -1,10 +1,11 @@
 import bcrypt from "bcrypt";
-import nodemailer from "nodemailer";
+// import nodemailer from "nodemailer";
 import User from "../Models/User.js";
 import { otpStore } from "../Utils/otpStore.js";
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 import HistoryModel from "../Models/HistoryModel.js";
+import { Resend } from "resend";
 
 dotenv.config();
 
@@ -86,7 +87,7 @@ dotenv.config();
 //     return res.json({ success: false, message: "Email sending failed" });
 //   }
 // };
-import { Resend } from "resend";
+
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
