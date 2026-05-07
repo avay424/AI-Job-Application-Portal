@@ -205,7 +205,7 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/send-otp", {
+      const res = await fetch("https://ai-job-application-portal-8.onrender.com/send-otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
