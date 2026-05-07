@@ -171,7 +171,7 @@ export default function History() {
           setToken(email);
         }
 
-        const res = await fetch("http://localhost:5000/history", {
+        const res = await fetch("https://ai-job-application-portal-8.onrender.com/history", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

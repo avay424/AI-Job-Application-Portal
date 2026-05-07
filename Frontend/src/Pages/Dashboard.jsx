@@ -250,7 +250,7 @@ function Dashboard() {
       formData.append("file", file);
       formData.append("job", job);
 
-      const res = await fetch("http://localhost:5000/api/ai/analyze", {
+      const res = await fetch("https://ai-job-application-portal-8.onrender.com/api/ai/analyze", {
         method: "POST",
         body: formData
       });

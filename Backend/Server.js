@@ -21,6 +21,9 @@ app.use("/", authRoutes);
 app.get("/", (req, res) => {
   res.send("AI Job Portal Running");
 });
+app.get("/api", (req, res) => {
+  res.send("AI Portal Running");
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);
