@@ -4,6 +4,7 @@ import User from "../models/User.js";
 import { otpStore } from "../utils/otpStore.js";
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
+import HistoryModel from "../models/HistoryModel.js";
 
 dotenv.config();
 
@@ -84,7 +85,7 @@ export const Login = async (req, res) => {
       return res.json({ success: false, message: "Wrong password" });
     }
 const token = jwt.sign(
-  { email: user.email },
+  { email: user.email,},
   process.env.JWT_SECRET,
   { expiresIn: "1d" }
 );
@@ -101,3 +102,27 @@ const token = jwt.sign(
   }
 };
 
+export const History = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.json({ success: false, message: "Email required" });
+    }
+
+  
+   const history = await HistoryModel.find().sort({ createdAt: -1 });
+
+    return res.json({
+      success: true,
+      result: history
+    });
+
+  } catch (err) {
+    console.log(err);
+    return res.json({
+      success: false,
+      message: "Server error"
+    });
+  }
+};

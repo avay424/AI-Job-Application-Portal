@@ -1,6 +1,7 @@
 
 import { extractText } from "../Services/pdfServices.js";
 import { analyzeWithAI } from "../Services/aiServices.js";
+import HistoryModel from "../models/HistoryModel.js";
 
 export const analyzeResume = async (req, res) => {
   try {
@@ -14,6 +15,17 @@ export const analyzeResume = async (req, res) => {
 
     const result = await analyzeWithAI(resumeText, job);
 
+  
+    await HistoryModel.create({
+      job,
+      atsScoreSection: result.atsScoreSection,
+      feedback: result.feedback,
+      matchedSkills: result.matchedSkills,
+      missingSkills: result.missingSkills,
+      improvedResume: result.improvedResume
+    });
+
+  
     res.json({
       success: true,
       result
