@@ -15,19 +15,19 @@ dotenv.config();
 //     pass: process.env.EMAIL_PASS
 //   }
 // });
-const transporter = nodemailer.createTransport({
-  // service: "gmail",
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASS
-  },
-    tls: {
-    rejectUnauthorized: false
-  }
-});
+// const transporter = nodemailer.createTransport({
+//   // service: "gmail",
+//   host: "smtp.gmail.com",
+//   port: 587,
+//   secure: false,
+//   auth: {
+//     user: process.env.EMAIL,
+//     pass: process.env.EMAIL_PASS
+//   },
+//     tls: {
+//     rejectUnauthorized: false
+//   }
+// });
 
 
 // export const sendOtp = async (req, res) => {
@@ -54,6 +54,42 @@ const transporter = nodemailer.createTransport({
 
 //   res.json({ success: true });
 // };
+// export const sendOtp = async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+
+//     if (!email || !password) {
+//       return res.json({ success: false, message: "Missing fields" });
+//     }
+
+//     const key = email.toLowerCase();
+
+//     const otp = Math.floor(100000 + Math.random() * 900000);
+
+//     otpStore[key] = {
+//       otp,
+//       password,
+//       expires: Date.now() + 300000
+//     };
+
+//     await transporter.sendMail({
+//       from: process.env.EMAIL,
+//       to: email,
+//       subject: "OTP",
+//       text: `Your OTP is ${otp}`
+//     });
+
+//     return res.json({ success: true });
+
+//   } catch (err) {
+//     console.log(err);
+//     return res.json({ success: false, message: "Email sending failed" });
+//   }
+// };
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 export const sendOtp = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -62,28 +98,26 @@ export const sendOtp = async (req, res) => {
       return res.json({ success: false, message: "Missing fields" });
     }
 
-    const key = email.toLowerCase();
-
     const otp = Math.floor(100000 + Math.random() * 900000);
 
-    otpStore[key] = {
+    otpStore[email.toLowerCase()] = {
       otp,
       password,
       expires: Date.now() + 300000
     };
 
-    await transporter.sendMail({
-      from: process.env.EMAIL,
+    await resend.emails.send({
+      from: "onboarding@resend.dev",
       to: email,
-      subject: "OTP",
-      text: `Your OTP is ${otp}`
+      subject: "Your OTP",
+      html: `<h2>Your OTP is: ${otp}</h2>`
     });
 
     return res.json({ success: true });
 
   } catch (err) {
     console.log(err);
-    return res.json({ success: false, message: "Email sending failed" });
+    return res.json({ success: false, message: "OTP send failed" });
   }
 };
 // export const verifyOtp = async (req, res) => {
