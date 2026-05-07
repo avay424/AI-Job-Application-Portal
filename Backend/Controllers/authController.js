@@ -1,21 +1,22 @@
 import bcrypt from "bcrypt";
-import nodemailer from "nodemailer";
+// import nodemailer from "nodemailer";
 import User from "../Models/User.js";
 import { otpStore } from "../Utils/otpStore.js";
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 import HistoryModel from "../Models/HistoryModel.js";
-import { Resend } from "resend";
+
+import sgMail from '@sendgrid/mail';
 
 dotenv.config();
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASS
-  }
-});
+// const transporter = nodemailer.createTransport({
+//   service: "gmail",
+//   auth: {
+//     user: process.env.EMAIL,
+//     pass: process.env.EMAIL_PASS
+//   }
+// });
 
 
 
@@ -43,39 +44,73 @@ const transporter = nodemailer.createTransport({
 
 //   res.json({ success: true });
 // };
+// export const sendOtp = async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+
+//     if (!email || !password) {
+//       return res.json({ success: false, message: "Missing fields" });
+//     }
+
+//     const key = email.toLowerCase();
+
+//     const otp = Math.floor(100000 + Math.random() * 900000);
+
+//     otpStore[key] = {
+//       otp,
+//       password,
+//       expires: Date.now() + 300000
+//     };
+
+//     await transporter.sendMail({
+//       from: process.env.EMAIL,
+//       to: email,
+//       subject: "OTP",
+//       text: `Your OTP is ${otp}`
+//     });
+
+//     return res.json({ success: true });
+
+//   } catch (err) {
+//     console.log(err);
+//     return res.json({ success: false, message: "Email sending failed" });
+//   }
+// };
+
+
 export const sendOtp = async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.json({ success: false, message: "Missing fields" });
+  }
+  const key = email.toLowerCase()
+  const otp = Math.floor(100000 + Math.random() * 900000);
+
+  otpStore[key] = {
+    otp,
+    password,
+    expires: Date.now() + 300000
+  };
+
   try {
-    const { email, password } = req.body;
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-    if (!email || !password) {
-      return res.json({ success: false, message: "Missing fields" });
-    }
-
-    const key = email.toLowerCase();
-
-    const otp = Math.floor(100000 + Math.random() * 900000);
-
-    otpStore[key] = {
-      otp,
-      password,
-      expires: Date.now() + 300000
-    };
-
-    await transporter.sendMail({
-      from: process.env.EMAIL,
+    await sgMail.send({
       to: email,
-      subject: "OTP",
-      text: `Your OTP is ${otp}`
+      from: process.env.FROM_EMAIL,
+      subject: "Your OTP Code",
+      text: `Your OTP is ${otp}`,
+      html: `<h3>Your OTP is ${otp}</h3><p>This OTP expires in 5 minutes.</p>`
     });
 
-    return res.json({ success: true });
+    res.json({ success: true, message: "OTP sent successfully" });
 
-  } catch (err) {
-    console.log(err);
-    return res.json({ success: false, message: "Email sending failed" });
+  } catch (error) {
+    console.error("SendGrid error:", error.response?.body || error);
+    res.json({ success: false, message: "Failed to send OTP" });
   }
 };
-
 
 
 export const verifyOtp = async (req, res) => {
@@ -123,18 +158,18 @@ export const Login = async (req, res) => {
     if (!isMatch) {
       return res.json({ success: false, message: "Wrong password" });
     }
-const token = jwt.sign(
-  { email: user.email,},
-  process.env.JWT_SECRET,
-  { expiresIn: "1d" }
-);
+    const token = jwt.sign(
+      { email: user.email, },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
     res.json({
       success: true,
       message: "Login successful",
-    token
+      token
     });
 
-    
+
 
   } catch (err) {
     res.json({ success: false, message: err.message });
@@ -149,8 +184,8 @@ export const History = async (req, res) => {
       return res.json({ success: false, message: "Email required" });
     }
 
-  
-   const history = await HistoryModel.find().sort({ createdAt: -1 });
+
+    const history = await HistoryModel.find().sort({ createdAt: -1 });
 
     return res.json({
       success: true,
