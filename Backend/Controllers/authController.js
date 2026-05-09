@@ -200,3 +200,30 @@ export const History = async (req, res) => {
     });
   }
 };
+
+export const ChangePassword = async (req, res) => {
+  const { email, currentPassword, newPassword, confirmPassword } = req.body;
+
+  if (!email || !currentPassword || !newPassword || !confirmPassword) {
+    return res.json({ success: false, message: "All fields are required" });
+  }
+
+  const find = await User.findOne({ email });
+  if (!find) {
+    return res.json({ success: false, message: "Email not found" });
+  }
+
+  const match = await bcrypt.compare(currentPassword, find.password);
+  if (!match) {
+    return res.json({ success: false, message: "Current password is wrong" });
+  }
+
+  if (newPassword !== confirmPassword) {
+    return res.json({ success: false, message: "New password and confirm password do not match" });
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  await User.updateOne({ email }, { password: hashedPassword });
+
+  return res.json({ success: true, message: "Password updated successfully" });
+};

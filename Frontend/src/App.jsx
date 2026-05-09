@@ -11,6 +11,7 @@ import Analyze from "./Pages/Analyze.jsx";
 import History from "./Pages/History.jsx";
 import Insights from "./Pages/Insights.jsx";
 import VerifyOtp from "./Pages/Otp.jsx";
+import ForgetPassword from "./Pages/ForgetPassword.jsx";
 
 
 function App() {
@@ -28,6 +29,8 @@ function App() {
       <Route path="/history" element={<History/>} />
       <Route path="/insights" element={<Insights/>} />
       <Route path="/verify-otp" element={<VerifyOtp/>} />
+       <Route path="/forget-password" element={<ForgetPassword/>} />
+
 
 
 

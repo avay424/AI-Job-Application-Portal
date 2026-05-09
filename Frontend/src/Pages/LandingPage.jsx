@@ -473,6 +473,51 @@ const LandingPage = () => {
 
       </div>
 
+
+<div className="border-t border-gray-800/50 bg-gray-900/30 mt-20">
+  <div className="max-w-7xl mx-auto  px-6 sm:px-10 py-10">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+      
+      <div >
+        <h3 className="text-xl font-bold text-blue-400 mb-3">JobAI Pro</h3>
+        <p className="text-gray-400 text-sm">AI-powered job application platform.</p>
+      </div>
+
+      <div>
+        <h4 className="text-white font-semibold mb-3">Quick Links</h4>
+        <ul className="space-y-2">
+          <li><Link to="/home" className="text-gray-400 hover:text-blue-400 text-sm transition">Home</Link></li>
+          <li><Link to="/features" className="text-gray-400 hover:text-blue-400 text-sm transition">Features</Link></li>
+          <li><Link to="/working" className="text-gray-400 hover:text-blue-400 text-sm transition">How It Works</Link></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 className="text-white font-semibold mb-3">Support</h4>
+        <ul className="space-y-2">
+          <li><Link to="/contact" className="text-gray-400 hover:text-blue-400 text-sm transition">Contact</Link></li>
+          <li><Link to="/privacy" className="text-gray-400 hover:text-blue-400 text-sm transition">Privacy</Link></li>
+          <li><Link to="/terms" className="text-gray-400 hover:text-blue-400 text-sm transition">Terms</Link></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 className="text-white font-semibold mb-3">Follow Us</h4>
+        <div className="flex gap-3">
+          <a href="#" className="text-gray-400 hover:text-blue-400 transition text-xl">📘</a>
+          <a href="#" className="text-gray-400 hover:text-blue-400 transition text-xl">🐦</a>
+          <a href="#" className="text-gray-400 hover:text-blue-400 transition text-xl">💼</a>
+          <a href="#" className="text-gray-400 hover:text-blue-400 transition text-xl">📷</a>
+        </div>
+      </div>
+    </div>
+
+    <div className="border-t border-gray-800/50 mt-8 pt-6 text-center">
+      <p className="text-gray-500 text-xs">© 2025 JobAI Pro. All rights reserved.</p>
+    </div>
+  </div>
+</div>
+
     </div>
   );
 };
